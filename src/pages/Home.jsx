@@ -12,9 +12,17 @@ export default function Home() {
     const symbols = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'NVDA', 'META', 'NFLX']
 
     useEffect(() => {
-        axios.get(`${API_BASE_URL}/api/market-news`)
-            .then(res => setMarketNews(res.data.slice(0, 8)))
-            .catch(err => console.error('News error:', err))
+        // axios.get(`${API_BASE_URL}/api/market-news`)
+        //     .then(res => setMarketNews(res.data.slice(0, 8)))
+        //     .catch(err => console.error('News error:', err))
+
+        const res = async () => {
+            const data = await axios.get(`${API_BASE_URL}/api/market-news`)
+            setMarketNews(data.data.slice(0, 8))
+            console.log("Market News Data:", data)
+        }
+
+        res()
     }, [])
 
     return (

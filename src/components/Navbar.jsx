@@ -5,11 +5,11 @@ export default function Navbar() {
     const location = useLocation()
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-    const navButtonStyle = (path) => ({
-        padding: '0.625rem 1.25rem',
+    const navButtonStyle = (path, isMobile = false) => ({
+        padding: isMobile ? '0.75rem 1rem' : '0.625rem 1.25rem',
         borderRadius: '8px',
         textDecoration: 'none',
-        fontSize: '0.95rem',
+        fontSize: isMobile ? '1rem' : '0.95rem',
         fontWeight: 600,
         transition: 'all 0.2s ease',
         border: '2px solid transparent',
@@ -18,8 +18,10 @@ export default function Navbar() {
             : 'transparent',
         color: location.pathname === path || location.pathname.startsWith(path + '/')
             ? '#fff'
-            : '#374151',
-        display: 'inline-block'
+            : '#000000ff',
+        display: 'block',
+        width: isMobile ? '100%' : 'auto',
+        textAlign: isMobile ? 'left' : 'center'
     })
 
     const handleMouseEnter = (e) => {
@@ -43,48 +45,37 @@ export default function Navbar() {
 
     return (
         <nav className="navbar" style={{ position: 'sticky', top: 0, zIndex: 1000 }}>
+            {/* Logo */}
             <Link
                 to="/"
+                onClick={handleLinkClick}
                 style={{
                     fontWeight: 700,
-                    fontSize: 'clamp(1.2rem, 3vw, 1.3rem)',
+                    fontSize: 'clamp(1.2rem, 4vw, 1.5rem)',
                     textDecoration: 'none',
                     color: '#000',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.5rem'
+                    gap: '0.5rem',
+                    whiteSpace: 'nowrap'
                 }}
             >
-                📈 Stock Analysis
+                Stock Analysis
             </Link>
 
-            {/* Mobile Menu Button */}
-            <button
-                className="mobile-menu-button"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                style={{
-                    display: 'none',
-                    background: 'transparent',
-                    border: '2px solid #000',
-                    borderRadius: '8px',
-                    padding: '0.5rem',
-                    cursor: 'pointer',
-                    fontSize: '1.5rem'
-                }}
-                aria-label="Toggle menu"
-            >
-                {mobileMenuOpen ? '✕' : '☰'}
-            </button>
-
             {/* Desktop Navigation */}
-            <div className="nav-links desktop-nav">
+            <div className="nav-links" style={{
+                display: 'flex',
+                gap: '0.5rem',
+                alignItems: 'center'
+            }}>
                 <Link
                     to="/"
                     style={navButtonStyle('/')}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={(e) => handleMouseLeave(e, '/')}
                 >
-                    🏠 Home
+                    Home
                 </Link>
                 <Link
                     to="/stock/AAPL"
@@ -92,7 +83,7 @@ export default function Navbar() {
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={(e) => handleMouseLeave(e, '/stock')}
                 >
-                    📊 Stocks
+                    Stocks
                 </Link>
                 <Link
                     to="/crypto"
@@ -100,7 +91,7 @@ export default function Navbar() {
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={(e) => handleMouseLeave(e, '/crypto')}
                 >
-                    💰 Crypto
+                    Crypto
                 </Link>
                 <Link
                     to="/watchlist"
@@ -108,7 +99,7 @@ export default function Navbar() {
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={(e) => handleMouseLeave(e, '/watchlist')}
                 >
-                    ⭐ Watchlist
+                    Watchlist
                 </Link>
                 <Link
                     to="/news"
@@ -116,59 +107,81 @@ export default function Navbar() {
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={(e) => handleMouseLeave(e, '/news')}
                 >
-                    📰 News
+                    News
                 </Link>
             </div>
 
-            {/* Mobile Navigation */}
+            {/* Mobile Menu Button */}
+            <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="mobile-menu-button"
+                style={{
+                    display: 'none',
+                    background: 'transparent',
+                    border: '2px solid #000',
+                    borderRadius: '8px',
+                    padding: '0.5rem',
+                    cursor: 'pointer',
+                    fontSize: '1.5rem',
+                    lineHeight: 1
+                }}
+                aria-label="Toggle menu"
+            >
+                {mobileMenuOpen ? '✕' : '☰'}
+            </button>
+
+            {/* Mobile Navigation Menu */}
             {mobileMenuOpen && (
-                <div className="mobile-nav" style={{
-                    position: 'absolute',
-                    top: '100%',
-                    left: 0,
-                    right: 0,
-                    background: '#fff',
-                    borderTop: '2px solid #e5e7eb',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                    padding: '1rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.5rem'
-                }}>
+                <div
+                    className="mobile-menu"
+                    style={{
+                        display: 'none',
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        right: 0,
+                        background: '#dedbdbff',
+                        borderBottom: '2px solid #e0dedeff',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                        padding: '1rem',
+                        flexDirection: 'column',
+                        gap: '0.5rem'
+                    }}
+                >
                     <Link
                         to="/"
                         onClick={handleLinkClick}
-                        style={{ ...navButtonStyle('/'), width: '100%', textAlign: 'center' }}
+                        style={navButtonStyle('/', true)}
                     >
-                        🏠 Home
+                        Home
                     </Link>
                     <Link
                         to="/stock/AAPL"
                         onClick={handleLinkClick}
-                        style={{ ...navButtonStyle('/stock'), width: '100%', textAlign: 'center' }}
+                        style={navButtonStyle('/stock', true)}
                     >
-                        📊 Stocks
+                        Stocks
                     </Link>
                     <Link
                         to="/crypto"
                         onClick={handleLinkClick}
-                        style={{ ...navButtonStyle('/crypto'), width: '100%', textAlign: 'center' }}
+                        style={navButtonStyle('/crypto', true)}
                     >
-                        💰 Crypto
+                        Crypto
                     </Link>
                     <Link
                         to="/watchlist"
                         onClick={handleLinkClick}
-                        style={{ ...navButtonStyle('/watchlist'), width: '100%', textAlign: 'center' }}
+                        style={navButtonStyle('/watchlist', true)}
                     >
-                        ⭐ Watchlist
+                        Watchlist
                     </Link>
                     <Link
                         to="/news"
                         onClick={handleLinkClick}
-                        style={{ ...navButtonStyle('/news'), width: '100%', textAlign: 'center' }}
+                        style={navButtonStyle('/news', true)}
                     >
-                        📰 News
+                        News
                     </Link>
                 </div>
             )}

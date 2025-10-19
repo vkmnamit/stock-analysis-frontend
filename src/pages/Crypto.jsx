@@ -7,27 +7,28 @@ export default function Crypto() {
     const [loading, setLoading] = useState(true)
     const [lastUpdated, setLastUpdated] = useState(null)
 
-    useEffect(() => {
-        // Fetch all crypto data from the new endpoint
-        const fetchCryptos = async () => {
-            try {
-                const res = await axios.get(`${API_BASE_URL}/api/crypto-list`)
-                setCryptos(res.data.cryptos || [])
-                setLastUpdated(res.data.lastUpdated)
-                setLoading(false)
-            } catch (err) {
-                console.error('Error fetching crypto list:', err)
-                setLoading(false)
-            }
+    // Fetch all crypto data from the new endpoint
+    const fetchCryptos = async () => {
+        setLoading(true)
+        try {
+            const res = await axios.get(`${API_BASE_URL}/api/crypto-list`)
+            setCryptos(res.data.cryptos || [])
+            setLastUpdated(res.data.lastUpdated)
+        } catch (err) {
+            console.error('Error fetching crypto list:', err)
+        } finally {
+            setLoading(false)
         }
-
+    }
+    useEffect(() => {
         fetchCryptos()
+    }, [])
 
+    useEffect(() => {
         // Auto-refresh every 30 seconds
         const interval = setInterval(fetchCryptos, 30000)
         return () => clearInterval(interval)
     }, [])
-
     return (
         <div className="page">
             <h1>💰 Cryptocurrency Market</h1>
