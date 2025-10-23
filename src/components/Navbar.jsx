@@ -57,7 +57,8 @@ export default function Navbar() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.5rem',
-                    whiteSpace: 'nowrap'
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0
                 }}
             >
                 Stock Analysis
@@ -67,7 +68,9 @@ export default function Navbar() {
             <div className="nav-links" style={{
                 display: 'flex',
                 gap: '0.5rem',
-                alignItems: 'center'
+                alignItems: 'center',
+                flex: 1,
+                justifyContent: 'flex-end'
             }}>
                 <Link
                     to="/"
@@ -120,11 +123,16 @@ export default function Navbar() {
                     background: 'transparent',
                     border: '2px solid #fff',
                     color: '#fff',
-                    borderRadius: '8px',
-                    padding: '0.5rem',
+                    borderRadius: '6px',
+                    padding: '0.4rem',
                     cursor: 'pointer',
-                    fontSize: '1.5rem',
-                    lineHeight: 1
+                    fontSize: '1.2rem',
+                    lineHeight: 1,
+                    minWidth: '40px',
+                    height: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
                 }}
                 aria-label="Toggle menu"
             >
@@ -141,7 +149,7 @@ export default function Navbar() {
                         top: '100%',
                         left: 0,
                         right: 0,
-                        background: '#ffffffff',
+                        background: '#000',
                         borderBottom: '2px solid #333',
                         boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                         padding: '1rem',
