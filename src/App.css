@@ -63,6 +63,12 @@
   .navbar {
     padding: 1rem;
     flex-wrap: wrap;
+    background: #000 !important;
+    border-bottom: 2px solid #333;
+  }
+
+  .navbar a:first-child {
+    color: #fff !important;
   }
 
   .nav-links {

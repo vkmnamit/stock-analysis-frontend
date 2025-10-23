@@ -14,11 +14,11 @@ export default function Navbar() {
         transition: 'all 0.2s ease',
         border: '2px solid transparent',
         background: location.pathname === path || location.pathname.startsWith(path + '/')
-            ? '#000'
+            ? '#fff'
             : 'transparent',
         color: location.pathname === path || location.pathname.startsWith(path + '/')
-            ? '#fff'
-            : '#000000ff',
+            ? '#000'
+            : '#fff',
         display: 'block',
         width: isMobile ? '100%' : 'auto',
         textAlign: isMobile ? 'left' : 'center'
@@ -118,7 +118,8 @@ export default function Navbar() {
                 style={{
                     display: 'none',
                     background: 'transparent',
-                    border: '2px solid #000',
+                    border: '2px solid #fff',
+                    color: '#fff',
                     borderRadius: '8px',
                     padding: '0.5rem',
                     cursor: 'pointer',
@@ -140,9 +141,9 @@ export default function Navbar() {
                         top: '100%',
                         left: 0,
                         right: 0,
-                        background: '#dedbdbff',
-                        borderBottom: '2px solid #e0dedeff',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                        background: '#000',
+                        borderBottom: '2px solid #333',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                         padding: '1rem',
                         flexDirection: 'column',
                         gap: '0.5rem'
