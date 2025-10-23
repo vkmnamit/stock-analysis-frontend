@@ -86,12 +86,12 @@ export default function Stock() {
             <div className="page">
                 <h1>{symbol}</h1>
                 <div className="card" style={{ background: '#fff9e6', border: '2px solid #ffd700', padding: '1.5rem' }}>
-                    <h3 style={{ color: '#d97706', marginTop: 0 }}>⚠️ Exchange Not Supported</h3>
+                    <h3 style={{ color: '#d97706', marginTop: 0 }}>Exchange Not Supported</h3>
                     <p style={{ color: '#92400e', marginBottom: '1rem' }}>
                         {company.error}
                     </p>
                     <div style={{ background: '#fff', padding: '1rem', borderRadius: '4px' }}>
-                        <p style={{ fontWeight: 600, marginBottom: '0.5rem' }}>✅ Fully Supported:</p>
+                        <p style={{ fontWeight: 600, marginBottom: '0.5rem' }}>Fully Supported:</p>
                         <ul style={{ paddingLeft: '1.5rem', marginBottom: '1rem' }}>
                             <li>US Stocks: AAPL, GOOGL, TSLA, MSFT, AMZN, META, NVDA, etc.</li>
                         </ul>
@@ -195,7 +195,7 @@ export default function Stock() {
                         alignItems: 'center',
                         gap: '0.5rem'
                     }}>
-                        📊 Key Financial Metrics
+                        Key Financial Metrics
                     </h3>
 
                     <div style={{
@@ -358,7 +358,7 @@ export default function Stock() {
                 </div>
             )}
             <h2 style={{ marginTop: '1.5rem', marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 600 }}>
-                📈 Price History (30 Days)
+                Price History (30 Days)
             </h2>
 
             <Chart data={chartData} symbol={symbol} />
@@ -367,7 +367,7 @@ export default function Stock() {
             {prediction && (
                 <>
                     <h2 style={{ marginTop: '2rem', marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 600 }}>
-                        🤖 AI-Powered Price Forecast
+                        AI-Powered Price Forecast
                     </h2>
                     <PredictionChart
                         data={prediction.prediction.predictions}
@@ -386,14 +386,14 @@ export default function Stock() {
             }}>
                 <div>
                     <h2 style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 600 }}>
-                        📊 Technical Indicators
+                        Technical Indicators
                     </h2>
                     <IndicatorTable symbol={symbol} />
                 </div>
 
                 <div>
                     <h2 style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 600 }}>
-                        📰 Latest News
+                        Latest News
                     </h2>
                     {news.length > 0 ? <NewsFeed news={news} /> : <p className="muted">No recent news available</p>}
                 </div>

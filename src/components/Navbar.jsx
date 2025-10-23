@@ -141,7 +141,7 @@ export default function Navbar() {
                         top: '100%',
                         left: 0,
                         right: 0,
-                        background: '#000',
+                        background: '#ffffffff',
                         borderBottom: '2px solid #333',
                         boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                         padding: '1rem',

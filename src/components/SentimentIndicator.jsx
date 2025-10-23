@@ -6,8 +6,8 @@ export default function SentimentIndicator({ prediction }) {
     const { direction, changePercent, targetPrice, confidence, newsCount } = prediction
 
     const getDirectionStyle = () => {
-        if (direction === 'bullish') return { color: '#000', icon: '📈', label: 'Bullish' }
-        if (direction === 'bearish') return { color: '#666', icon: '📉', label: 'Bearish' }
+        if (direction === 'bullish') return { color: '#000', icon: '', label: 'Bullish' }
+        if (direction === 'bearish') return { color: '#666', icon: '', label: 'Bearish' }
         return { color: '#999', icon: '➡️', label: 'Neutral' }
     }
 
@@ -69,7 +69,7 @@ export default function SentimentIndicator({ prediction }) {
             </div>
 
             <div style={{ marginTop: '0.75rem', fontSize: '0.75rem', color: '#999', textAlign: 'center' }}>
-                ⚠️ This is AI-generated prediction based on news sentiment. Not financial advice.
+                This is AI-generated prediction based on news sentiment. Not financial advice.
             </div>
         </div>
     )

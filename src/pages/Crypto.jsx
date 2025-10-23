@@ -31,7 +31,7 @@ export default function Crypto() {
     }, [])
     return (
         <div className="page">
-            <h1>💰 Cryptocurrency Market</h1>
+            <h1>Cryptocurrency Market</h1>
             <p className="muted" style={{ marginBottom: '1.5rem' }}>
                 Live prices • Auto-refreshes every 30 seconds
                 {lastUpdated && <span> • Last updated: {new Date(lastUpdated).toLocaleTimeString()}</span>}

@@ -14,7 +14,7 @@ export default function PredictionChart({ data, currentPrice, sentiment }) {
     // Determine trend and colors
     const isPositive = sentiment > 0
     const trendColor = sentiment > 0.1 ? '#16a34a' : sentiment < -0.1 ? '#dc2626' : '#6b7280'
-    const directionIcon = sentiment > 0.1 ? '📈' : sentiment < -0.1 ? '📉' : '➡️'
+    const directionIcon = sentiment > 0.1 ? '' : sentiment < -0.1 ? '' : ''
     const trendText = sentiment > 0.1 ? 'Bullish' : sentiment < -0.1 ? 'Bearish' : 'Neutral'
 
     return (
@@ -179,7 +179,7 @@ export default function PredictionChart({ data, currentPrice, sentiment }) {
                     fontSize: '0.8rem',
                     color: '#92400e'
                 }}>
-                    <strong>⚠️ Disclaimer:</strong> This is an AI-generated prediction based on sentiment analysis.
+                    <strong>Disclaimer:</strong> This is an AI-generated prediction based on sentiment analysis.
                     Not financial advice. Always do your own research before making investment decisions.
                 </div>
             </div>

@@ -253,7 +253,7 @@ export default function Watchlist() {
                                     fontWeight: 600
                                 }}
                             >
-                                📈 Gainers
+                                Gainers
                             </button>
                             <button
                                 onClick={() => setFilterBy('losers')}
@@ -268,7 +268,7 @@ export default function Watchlist() {
                                     fontWeight: 600
                                 }}
                             >
-                                📉 Losers
+                                Losers
                             </button>
                         </div>
 
@@ -298,7 +298,7 @@ export default function Watchlist() {
             {/* Watchlist Display */}
             {watchlist.length === 0 ? (
                 <div className="card" style={{ padding: '3rem', textAlign: 'center' }}>
-                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📊</div>
+                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}></div>
                     <h3 style={{ marginBottom: '0.5rem' }}>Your watchlist is empty</h3>
                     <p className="muted">Search and add stocks to track them here</p>
                 </div>

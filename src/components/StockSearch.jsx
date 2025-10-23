@@ -255,7 +255,7 @@ export default function StockSearch() {
 
                 <div style={{ marginTop: '1rem', padding: '0.75rem', background: '#fff9e6', border: '1px solid #ffd700' }}>
                     <p style={{ fontSize: '0.85rem', margin: '0 0 0.5rem 0', fontWeight: 600, color: '#d97706' }}>
-                        ⚠️ Important: Supported Exchanges
+                        Important: Supported Exchanges
                     </p>
                     <ul style={{ fontSize: '0.8rem', margin: 0, paddingLeft: '1.5rem', color: '#92400e' }}>
                         <li><strong>Full Support:</strong> US stocks work best (AAPL, GOOGL, TSLA, MSFT)</li>

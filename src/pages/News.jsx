@@ -21,7 +21,7 @@ export default function News() {
 
     return (
         <div className="page">
-            <h1>📰 Market News & Analysis</h1>
+            <h1>Market News & Analysis</h1>
             <p className="muted" style={{ marginBottom: '1.5rem' }}>
                 Latest financial news from the past 7 days
             </p>

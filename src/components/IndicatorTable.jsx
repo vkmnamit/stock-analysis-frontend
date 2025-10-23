@@ -37,7 +37,7 @@ export default function IndicatorTable({ symbol }) {
         return (
             <div className="card" style={{ marginTop: '1rem', background: '#fef2f2', border: '1px solid #fecaca' }}>
                 <div style={{ color: '#dc2626', padding: '1rem' }}>
-                    ⚠️ {error}
+                    {error}
                 </div>
             </div>
         )
@@ -175,7 +175,7 @@ export default function IndicatorTable({ symbol }) {
                 justifyContent: 'space-between',
                 marginBottom: '1rem'
             }}>
-                <h3 style={{ margin: 0 }}>📊 Financial Overview</h3>
+                <h3 style={{ margin: 0 }}>Financial Overview</h3>
                 <span style={{
                     fontSize: '0.75rem',
                     color: '#6b7280',
@@ -188,14 +188,14 @@ export default function IndicatorTable({ symbol }) {
             </div>
 
             <div style={{ maxHeight: '600px', overflowY: 'auto', paddingRight: '0.5rem' }}>
-                {renderMetricGroup('Valuation Metrics', valuationMetrics, '💰')}
-                {renderMetricGroup('Profitability', profitabilityMetrics, '📈')}
-                {renderMetricGroup('Financial Health', financialHealthMetrics, '🏦')}
-                {renderMetricGroup('Growth Metrics', growthMetrics, '🚀')}
-                {renderMetricGroup('Balance Sheet', balanceSheetMetrics, '📊')}
-                {renderMetricGroup('Income Statement', incomeMetrics, '💼')}
-                {renderMetricGroup('Market Data', marketMetrics, '🌍')}
-                {renderMetricGroup('Technical Indicators', technicalMetrics, '📉')}
+                {renderMetricGroup('Valuation Metrics', valuationMetrics, '')}
+                {renderMetricGroup('Profitability', profitabilityMetrics, '')}
+                {renderMetricGroup('Financial Health', financialHealthMetrics, '')}
+                {renderMetricGroup('Growth Metrics', growthMetrics, '')}
+                {renderMetricGroup('Balance Sheet', balanceSheetMetrics, '')}
+                {renderMetricGroup('Income Statement', incomeMetrics, '')}
+                {renderMetricGroup('Market Data', marketMetrics, '')}
+                {renderMetricGroup('Technical Indicators', technicalMetrics, '')}
             </div>
 
             {indicators.lastUpdated && (
