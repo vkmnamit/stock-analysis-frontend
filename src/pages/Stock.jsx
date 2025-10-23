@@ -14,6 +14,7 @@ export default function Stock() {
     const [chartData, setChartData] = useState([])
     const [news, setNews] = useState([])
     const [prediction, setPrediction] = useState(null)
+    const [indicators, setIndicators] = useState(null)
 
     useEffect(() => {
         if (!symbol) return
@@ -32,6 +33,11 @@ export default function Stock() {
                     setCompany({ error: err.response.data.message || 'Stock exchange not supported' })
                 }
             })
+
+        // Fetch financial indicators
+        axios.get(`${API_BASE_URL}/api/indicators/${symbol}`)
+            .then(res => setIndicators(res.data.indicators))
+            .catch(err => console.error('Indicators error:', err))
 
         // Fetch stock-specific news
         axios.get(`${API_BASE_URL}/api/stock-news/${symbol}`)
@@ -173,8 +179,184 @@ export default function Stock() {
                     </div>
                 </div>
             </div>
+            {indicators && (
+                <div className="card" style={{
+                    marginBottom: '1.5rem',
+                    padding: '1.5rem',
+                    background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                    border: '1px solid #e2e8f0'
+                }}>
+                    <h3 style={{
+                        marginBottom: '1rem',
+                        fontSize: '1.1rem',
+                        fontWeight: 600,
+                        color: '#1e293b',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem'
+                    }}>
+                        📊 Key Financial Metrics
+                    </h3>
 
-            {/* Price Chart Section */}
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+                        gap: '1rem'
+                    }}>
+                        {/* PE Ratio */}
+                        {indicators.peRatio && (
+                            <div style={{
+                                background: 'white',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>P/E Ratio</div>
+                                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+                                    {indicators.peRatio}
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                                    Price/Earnings
+                                </div>
+                            </div>
+                        )}
+
+                        {/* PB Ratio */}
+                        {indicators.pbRatio && (
+                            <div style={{
+                                background: 'white',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>P/B Ratio</div>
+                                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+                                    {indicators.pbRatio}
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                                    Price/Book
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Market Cap */}
+                        {indicators.marketCap && (
+                            <div style={{
+                                background: 'white',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>Market Cap</div>
+                                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+                                    {indicators.marketCap}
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                                    Total Value
+                                </div>
+                            </div>
+                        )}
+
+                        {/* ROE */}
+                        {indicators.roe && (
+                            <div style={{
+                                background: 'white',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>ROE</div>
+                                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+                                    {indicators.roe}%
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                                    Return on Equity
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Debt-to-Equity */}
+                        {indicators.debtToEquity && (
+                            <div style={{
+                                background: 'white',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>D/E Ratio</div>
+                                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+                                    {indicators.debtToEquity}
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                                    Debt/Equity
+                                </div>
+                            </div>
+                        )}
+
+                        {/* EPS */}
+                        {indicators.eps && (
+                            <div style={{
+                                background: 'white',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>EPS</div>
+                                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+                                    {indicators.eps}
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                                    Earnings/Share
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Total Equity */}
+                        {indicators.totalEquity && (
+                            <div style={{
+                                background: 'white',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>Total Equity</div>
+                                <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#0f172a' }}>
+                                    {indicators.totalEquity}
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                                    Shareholders' Equity
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Beta */}
+                        {indicators.beta && (
+                            <div style={{
+                                background: 'white',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>Beta</div>
+                                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+                                    {indicators.beta}
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                                    Volatility Measure
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
             <h2 style={{ marginTop: '1.5rem', marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 600 }}>
                 📈 Price History (30 Days)
             </h2>
