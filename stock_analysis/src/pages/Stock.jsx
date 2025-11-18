@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import Chart from '../components/Chart'
 import IndicatorTable from '../components/IndicatorTable'
+import NewsFeed from '../components/NewsFeed'
+import PredictionChart from '../components/PredictionChart'
 import { API_BASE_URL } from '../config'
 
 export default function Stock() {
@@ -10,6 +12,9 @@ export default function Stock() {
     const [quote, setQuote] = useState(null)
     const [company, setCompany] = useState(null)
     const [chartData, setChartData] = useState([])
+    const [news, setNews] = useState([])
+    const [prediction, setPrediction] = useState(null)
+    const [indicators, setIndicators] = useState(null)
 
     useEffect(() => {
         if (!symbol) return
@@ -22,7 +27,27 @@ export default function Stock() {
         // Fetch company profile
         axios.get(`${API_BASE_URL}/api/company/${symbol}`)
             .then(res => setCompany(res.data))
-            .catch(err => console.error('Company error:', err))
+            .catch(err => {
+                console.error('Company error:', err)
+                if (err.response && err.response.status === 403) {
+                    setCompany({ error: err.response.data.message || 'Stock exchange not supported' })
+                }
+            })
+
+        // Fetch financial indicators
+        axios.get(`${API_BASE_URL}/api/indicators/${symbol}`)
+            .then(res => setIndicators(res.data.indicators))
+            .catch(err => console.error('Indicators error:', err))
+
+        // Fetch stock-specific news
+        axios.get(`${API_BASE_URL}/api/stock-news/${symbol}`)
+            .then(res => setNews(res.data.slice(0, 5)))
+            .catch(err => console.error('Stock news error:', err))
+
+        // Fetch AI prediction
+        axios.get(`${API_BASE_URL}/api/prediction/${symbol}`)
+            .then(res => setPrediction(res.data))
+            .catch(err => console.error('Prediction error:', err))
 
         // Fetch real candle data (last 30 days, daily resolution)
         const to = Math.floor(Date.now() / 1000)
@@ -40,29 +65,339 @@ export default function Stock() {
                         open: res.data.o[i],
                         high: res.data.h[i],
                         low: res.data.l[i],
+                        _mock: res.data._mock // Flag if this is mock data
                     }))
                     setChartData(data)
                 } else {
                     console.error('No candle data available')
                 }
             })
-            .catch(err => console.error('Candle error:', err))
+            .catch(err => {
+                console.error('Candle error:', err)
+                // Even on error, chart will show with just current price point
+            })
     }, [symbol])
 
     if (!quote) return <div className="page">Loading...</div>
 
-    return (
-        <div className="page">
-            <h1>{symbol}</h1>
-            {company && <p className="muted">{company.name || 'Company'}</p>}
-            <div className="card" style={{ marginBottom: '1rem' }}>
-                <div style={{ fontSize: '2rem', fontWeight: 700 }}>${quote.c}</div>
-                <div className="muted">
-                    Open: ${quote.o} | High: ${quote.h} | Low: ${quote.l} | Prev Close: ${quote.pc}
+    // Check if we got an error response
+    if (company && company.error) {
+        return (
+            <div className="page">
+                <h1>{symbol}</h1>
+                <div className="card" style={{ background: '#fff9e6', border: '2px solid #ffd700', padding: '1.5rem' }}>
+                    <h3 style={{ color: '#d97706', marginTop: 0 }}>Exchange Not Supported</h3>
+                    <p style={{ color: '#92400e', marginBottom: '1rem' }}>
+                        {company.error}
+                    </p>
+                    <div style={{ background: '#fff', padding: '1rem', borderRadius: '4px' }}>
+                        <p style={{ fontWeight: 600, marginBottom: '0.5rem' }}>Fully Supported:</p>
+                        <ul style={{ paddingLeft: '1.5rem', marginBottom: '1rem' }}>
+                            <li>US Stocks: AAPL, GOOGL, TSLA, MSFT, AMZN, META, NVDA, etc.</li>
+                        </ul>
+                        <p style={{ fontSize: '0.9rem', color: '#666' }}>
+                            The free API tier has limited support for international exchanges. Please try a US stock symbol.
+                        </p>
+                    </div>
                 </div>
             </div>
-            <Chart data={chartData} />
-            <IndicatorTable symbol={symbol} />
+        )
+    }
+
+    const changePercent = ((quote.c - quote.pc) / quote.pc * 100).toFixed(2)
+    const isPositive = changePercent >= 0
+
+    return (
+        <div className="page">
+            {/* Header Section */}
+            <div style={{ marginBottom: '1.5rem' }}>
+                <h1 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '0.5rem' }}>{symbol}</h1>
+                {company && !company.error && (
+                    <p className="muted" style={{ fontSize: '1rem' }}>
+                        {company.name || 'Company'} • {company.country || 'N/A'} • {company.exchange || 'N/A'}
+                    </p>
+                )}
+            </div>
+
+            {/* Price Card - Modern & Minimal */}
+            <div className="card" style={{
+                marginBottom: '1.5rem',
+                padding: '1.5rem',
+                background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+                border: '1px solid #e5e7eb'
+            }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: '2.5rem', fontWeight: 700, color: '#111', marginBottom: '0.5rem' }}>
+                            ${quote.c?.toFixed(2)}
+                        </div>
+                        <div style={{
+                            fontSize: '1.1rem',
+                            fontWeight: 600,
+                            color: isPositive ? '#16a34a' : '#dc2626',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem'
+                        }}>
+                            <span style={{
+                                background: isPositive ? '#f0fdf4' : '#fef2f2',
+                                padding: '0.35rem 0.75rem',
+                                borderRadius: '6px',
+                                display: 'inline-block'
+                            }}>
+                                {isPositive ? '▲' : '▼'} ${Math.abs(quote.c - quote.pc).toFixed(2)} ({changePercent}%)
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Market Stats */}
+                <div style={{
+                    marginTop: '1.25rem',
+                    paddingTop: '1.25rem',
+                    borderTop: '1px solid #e5e7eb',
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+                    gap: '1rem',
+                    fontSize: '0.85rem'
+                }}>
+                    <div>
+                        <div style={{ color: '#6b7280', marginBottom: '0.25rem' }}>Open</div>
+                        <div style={{ fontWeight: 600, color: '#111' }}>${quote.o?.toFixed(2)}</div>
+                    </div>
+                    <div>
+                        <div style={{ color: '#6b7280', marginBottom: '0.25rem' }}>High</div>
+                        <div style={{ fontWeight: 600, color: '#16a34a' }}>${quote.h?.toFixed(2)}</div>
+                    </div>
+                    <div>
+                        <div style={{ color: '#6b7280', marginBottom: '0.25rem' }}>Low</div>
+                        <div style={{ fontWeight: 600, color: '#dc2626' }}>${quote.l?.toFixed(2)}</div>
+                    </div>
+                    <div>
+                        <div style={{ color: '#6b7280', marginBottom: '0.25rem' }}>Prev Close</div>
+                        <div style={{ fontWeight: 600, color: '#111' }}>${quote.pc?.toFixed(2)}</div>
+                    </div>
+                </div>
+            </div>
+            {indicators && (
+                <div className="card" style={{
+                    marginBottom: '1.5rem',
+                    padding: '1.5rem',
+                    background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                    border: '1px solid #e2e8f0'
+                }}>
+                    <h3 style={{
+                        marginBottom: '1rem',
+                        fontSize: '1.1rem',
+                        fontWeight: 600,
+                        color: '#1e293b',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem'
+                    }}>
+                        Key Financial Metrics
+                    </h3>
+
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+                        gap: '1rem'
+                    }}>
+                        {/* PE Ratio */}
+                        {indicators.peRatio && (
+                            <div style={{
+                                background: 'white',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>P/E Ratio</div>
+                                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+                                    {indicators.peRatio}
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                                    Price/Earnings
+                                </div>
+                            </div>
+                        )}
+
+                        {/* PB Ratio */}
+                        {indicators.pbRatio && (
+                            <div style={{
+                                background: 'white',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>P/B Ratio</div>
+                                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+                                    {indicators.pbRatio}
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                                    Price/Book
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Market Cap */}
+                        {indicators.marketCap && (
+                            <div style={{
+                                background: 'white',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>Market Cap</div>
+                                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+                                    {indicators.marketCap}
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                                    Total Value
+                                </div>
+                            </div>
+                        )}
+
+                        {/* ROE */}
+                        {indicators.roe && (
+                            <div style={{
+                                background: 'white',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>ROE</div>
+                                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+                                    {indicators.roe}%
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                                    Return on Equity
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Debt-to-Equity */}
+                        {indicators.debtToEquity && (
+                            <div style={{
+                                background: 'white',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>D/E Ratio</div>
+                                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+                                    {indicators.debtToEquity}
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                                    Debt/Equity
+                                </div>
+                            </div>
+                        )}
+
+                        {/* EPS */}
+                        {indicators.eps && (
+                            <div style={{
+                                background: 'white',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>EPS</div>
+                                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+                                    {indicators.eps}
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                                    Earnings/Share
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Total Equity */}
+                        {indicators.totalEquity && (
+                            <div style={{
+                                background: 'white',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>Total Equity</div>
+                                <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#0f172a' }}>
+                                    {indicators.totalEquity}
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                                    Shareholders' Equity
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Beta */}
+                        {indicators.beta && (
+                            <div style={{
+                                background: 'white',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                border: '1px solid #e2e8f0',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>Beta</div>
+                                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>
+                                    {indicators.beta}
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                                    Volatility Measure
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+            <h2 style={{ marginTop: '1.5rem', marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 600 }}>
+                Price History (30 Days)
+            </h2>
+
+            <Chart data={chartData} symbol={symbol} />
+
+            {/* AI Prediction Chart */}
+            {prediction && (
+                <>
+                    <h2 style={{ marginTop: '2rem', marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 600 }}>
+                        AI-Powered Price Forecast
+                    </h2>
+                    <PredictionChart
+                        data={prediction.prediction.predictions}
+                        currentPrice={prediction.currentPrice}
+                        sentiment={prediction.sentiment}
+                    />
+                </>
+            )}
+
+            {/* Technical Indicators and News in 2-column layout */}
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+                gap: '1.5rem',
+                marginTop: '2rem'
+            }}>
+                <div>
+                    <h2 style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 600 }}>
+                        Technical Indicators
+                    </h2>
+                    <IndicatorTable symbol={symbol} />
+                </div>
+
+                <div>
+                    <h2 style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 600 }}>
+                        Latest News
+                    </h2>
+                    {news.length > 0 ? <NewsFeed news={news} /> : <p className="muted">No recent news available</p>}
+                </div>
+            </div>
         </div>
     )
 }
