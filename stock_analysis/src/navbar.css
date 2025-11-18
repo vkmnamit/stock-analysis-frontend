@@ -1,0 +1,74 @@
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    nav>div {
+        padding: 0 1rem !important;
+    }
+
+    nav>div>div:nth-child(2) {
+        display: none !important;
+    }
+
+    nav>div>button {
+        display: flex !important;
+    }
+
+    .mobile-menu {
+        display: flex !important;
+    }
+}
+
+/* Tablet Styles */
+@media (max-width: 1024px) and (min-width: 769px) {
+    nav>div>div:nth-child(2) {
+        gap: 0.25rem !important;
+    }
+
+    nav>div>div:nth-child(2) a {
+        padding: 0.625rem 1rem !important;
+        font-size: 0.9rem !important;
+    }
+}
+
+
+nav a:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+nav button:hover {
+    transform: scale(1.05) !important;
+}
+
+
+nav a:focus,
+nav button:focus {
+    outline: 2px solid #1a1a1a;
+    outline-offset: 2px;
+}
+
+/* Smooth transitions for all interactive elements */
+nav * {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
