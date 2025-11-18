@@ -14,11 +14,11 @@ export default function Navbar() {
         transition: 'all 0.2s ease',
         border: '2px solid transparent',
         background: location.pathname === path || location.pathname.startsWith(path + '/')
-            ? '#fff'
+            ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
             : 'transparent',
         color: location.pathname === path || location.pathname.startsWith(path + '/')
-            ? '#000'
-            : '#fff',
+            ? '#ffffff'
+            : '#1a1a1a',
         display: 'block',
         width: isMobile ? '100%' : 'auto',
         textAlign: isMobile ? 'left' : 'center'
@@ -26,8 +26,8 @@ export default function Navbar() {
 
     const handleMouseEnter = (e) => {
         if (e.target.style.background === 'transparent') {
-            e.target.style.background = '#f3f4f6'
-            e.target.style.color = '#000'
+            e.target.style.background = '#f8f9fa'
+            e.target.style.color = '#1a1a1a'
         }
     }
 
@@ -35,7 +35,7 @@ export default function Navbar() {
         const isActive = location.pathname === path || location.pathname.startsWith(path + '/')
         if (!isActive) {
             e.target.style.background = 'transparent'
-            e.target.style.color = '#374151'
+            e.target.style.color = '#1a1a1a'
         }
     }
 
