@@ -179,6 +179,102 @@ export default function Stock() {
                     </div>
                 </div>
             </div>
+
+            {/* Financial Metrics Section - Always Show */}
+            <div className="card" style={{
+                marginBottom: '1.5rem',
+                padding: '1.5rem',
+                background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                border: '2px solid #3b82f6'
+            }}>
+                <h3 style={{
+                    marginBottom: '1rem',
+                    fontSize: '1.25rem',
+                    fontWeight: 700,
+                    color: '#1e293b'
+                }}>
+                    📊 Key Financial Metrics {!indicators && '(Loading...)'}
+                </h3>
+
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+                    gap: '1rem'
+                }}>
+                    {/* PE Ratio - Always visible */}
+                    <div style={{
+                        background: 'white',
+                        padding: '1.25rem',
+                        borderRadius: '10px',
+                        border: '2px solid #e2e8f0',
+                        textAlign: 'center',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                    }}>
+                        <div style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '0.5rem', fontWeight: 600 }}>P/E Ratio</div>
+                        <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#3b82f6' }}>
+                            {indicators?.peRatio || 'Loading...'}
+                        </div>
+                        <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                            Price/Earnings
+                        </div>
+                    </div>
+
+                    {/* PB Ratio - Always visible */}
+                    <div style={{
+                        background: 'white',
+                        padding: '1.25rem',
+                        borderRadius: '10px',
+                        border: '2px solid #e2e8f0',
+                        textAlign: 'center',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                    }}>
+                        <div style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '0.5rem', fontWeight: 600 }}>P/B Ratio</div>
+                        <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#10b981' }}>
+                            {indicators?.pbRatio || 'Loading...'}
+                        </div>
+                        <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                            Price/Book
+                        </div>
+                    </div>
+
+                    {/* ROE - Always visible */}
+                    <div style={{
+                        background: 'white',
+                        padding: '1.25rem',
+                        borderRadius: '10px',
+                        border: '2px solid #e2e8f0',
+                        textAlign: 'center',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                    }}>
+                        <div style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '0.5rem', fontWeight: 600 }}>ROE</div>
+                        <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#f59e0b' }}>
+                            {indicators?.roe ? `${indicators.roe}%` : 'Loading...'}
+                        </div>
+                        <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                            Return on Equity
+                        </div>
+                    </div>
+
+                    {/* Market Cap - Always visible */}
+                    <div style={{
+                        background: 'white',
+                        padding: '1.25rem',
+                        borderRadius: '10px',
+                        border: '2px solid #e2e8f0',
+                        textAlign: 'center',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                    }}>
+                        <div style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '0.5rem', fontWeight: 600 }}>Market Cap</div>
+                        <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#8b5cf6' }}>
+                            {indicators?.marketCap || 'Loading...'}
+                        </div>
+                        <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.25rem' }}>
+                            Total Value
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {indicators && (
                 <div className="card" style={{
                     marginBottom: '1.5rem',
